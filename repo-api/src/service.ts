@@ -108,7 +108,7 @@ export class Service {
 
 	#get(db: string, name: string): Item[] | Item | undefined {
 		if (name === '') return this.#dbs[db]?.data;
-		return this.#dbs[db].data[name];
+		return this.#dbs[db]?.data[name];
 	}
 
 	has(db: string, name: string): boolean {
