@@ -21,7 +21,7 @@ const fetchDataRemote = async (
 ) => {
   const res = await (
     await fetch(
-      `http://localhost:1234/${route.query.repo}.${route.query.dist}/?_page=${page}&_per_page=${per}&q=${search || ""}&${Object.keys(
+      `http://${window.location.hostname}:1234/${route.query.repo}.${route.query.dist}/?_page=${page}&_per_page=${per}&q=${search || ""}&${Object.keys(
         extraflags,
       )
         .map((k) => `${k}=${extraflags[k]}`)
