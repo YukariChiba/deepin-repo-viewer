@@ -80,7 +80,9 @@
                                 :text="data"
                                 size="x-small"
                                 :color="
-                                    data != item.data.source ? 'warning' : ''
+                                    data != item.data.source && item.data.source
+                                        ? 'warning'
+                                        : ''
                                 "
                             />
                             <br />
