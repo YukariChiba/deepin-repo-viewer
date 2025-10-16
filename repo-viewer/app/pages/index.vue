@@ -3,6 +3,12 @@
         <v-card-title class="d-flex align-center">
             {{ `${route.query.repo} | ${route.query.dist}` }}
             <v-spacer class="mx-1" />
+            <v-checkbox
+                class="mx-4"
+                hide-details
+                label="Version Mismatch"
+                @click="setextra('data.meta.version_mismatch')"
+            />
             <v-text-field
                 v-model="search"
                 label="Search"
@@ -105,6 +111,23 @@ const curpage = ref(1);
 
 const route = useRoute();
 
+const extraflags: Ref<{ [key: string]: string }> = ref({});
+
+const setextra = async (str: string, content: string | null = null) => {
+    if (content) {
+        extraflags.value[str] = content;
+    } else {
+        if (str in Object.keys(extraflags)) {
+            extraflags.value[str] =
+                extraflags.value[str] === "true" ? "false" : "true";
+        } else {
+            extraflags.value[str] = "true";
+        }
+    }
+
+    await fetchdata();
+};
+
 const check_mismatch = (it, arch) => {
     return ((it.data.meta || {}).version_mismatch || {})[arch];
 };
@@ -130,6 +153,7 @@ const fetchdata = async (
         curpage.value,
         itemsperpage.value,
         search.value,
+        extraflags.value,
     );
     items.value.splice(0, items.value.length, ...res.data);
     totalitems.value = res.items;

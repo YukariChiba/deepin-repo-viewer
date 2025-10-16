@@ -17,10 +17,15 @@ const fetchDataRemote = async (
   page: number = 1,
   per: number = 100,
   search: string | null = null,
+  extraflags: { [key: string]: string } = {},
 ) => {
   const res = await (
     await fetch(
-      `http://localhost:1234/${route.query.repo}.${route.query.dist}/?_page=${page}&_per_page=${per}&q=${search || ""}`,
+      `http://localhost:1234/${route.query.repo}.${route.query.dist}/?_page=${page}&_per_page=${per}&q=${search || ""}&${Object.keys(
+        extraflags,
+      )
+        .map((k) => `${k}=${extraflags[k]}`)
+        .join("&")}`,
     )
   ).json();
   return res;
