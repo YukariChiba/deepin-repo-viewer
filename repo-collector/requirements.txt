@@ -1,0 +1,7 @@
+python-debian
+dotenv
+requests
+python-dotenv
+hashlib
+addict
+yaml

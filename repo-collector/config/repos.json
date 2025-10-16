@@ -1,0 +1,47 @@
+[
+  {
+    "id": "23-stable",
+    "url": "https://community-packages.deepin.com/deepin/beige",
+    "codenames": ["beige"]
+  },
+  {
+    "id": "25-stable",
+    "url": "https://community-packages.deepin.com/deepin/beige",
+    "codenames": ["crimson"]
+  },
+  {
+    "id": "25-testing",
+    "url": "https://proposed-packages.deepin.com/beige-testing",
+    "codenames": ["unstable/crimson"]
+  },
+  {
+    "id": "25-hwe",
+    "url": "https://community-packages.deepin.com/hwe-25",
+    "codenames": ["unstable"]
+  },
+  {
+    "id": "23-stable-internal",
+    "url": "https://ci.deepin.com/repo/deepin/deepin-community/stable",
+    "codenames": ["beige"]
+  },
+  {
+    "id": "25-stable-internal",
+    "url": "https://ci.deepin.com/repo/deepin/deepin-community/stable",
+    "codenames": ["crimson"]
+  },
+  {
+    "id": "25-testing-internal",
+    "url": "https://ci.deepin.com/repo/deepin/deepin-community/testing",
+    "codenames": ["unstable/crimson"]
+  },
+  {
+    "id": "25-hwe-internal",
+    "url": "https://ci.deepin.com/repo/deepin/deepin-community/hwe-25",
+    "codenames": ["unstable"]
+  },
+  {
+    "id": "ports",
+    "url": "https://ci.deepin.com/repo/deepin/deepin-ports/repo",
+    "codenames": ["ports"]
+  }
+]

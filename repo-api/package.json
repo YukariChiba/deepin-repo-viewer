@@ -1,0 +1,22 @@
+{
+	"name": "repo-api",
+	"version": "0.0.0",
+	"private": true,
+	"devDependencies": {
+		"@eslint/js": "^9.37.0",
+		"@types/node": "^24.7.2",
+		"eslint": "^9.37.0",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.46.1"
+	},
+	"dependencies": {
+		"@tinyhttp/app": "^3.0.1",
+		"@tinyhttp/cors": "^2.0.1",
+		"dot-prop": "^10.1.0",
+		"inflection": "^3.0.2",
+		"lowdb": "^7.0.1",
+		"milliparsec": "^5.1.0",
+		"sirv": "^3.0.2",
+		"sort-on": "^7.0.0"
+	}
+}
