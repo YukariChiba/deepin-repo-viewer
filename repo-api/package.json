@@ -2,6 +2,9 @@
 	"name": "repo-api",
 	"version": "0.0.0",
 	"private": true,
+	"scripts": {
+		"serve": "bun src/index.ts"
+	},
 	"devDependencies": {
 		"@eslint/js": "^9.37.0",
 		"@types/node": "^24.7.2",

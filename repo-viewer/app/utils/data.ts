@@ -7,12 +7,13 @@ const fetchDataLocal = async (route: RouteLocationNormalizedLoadedGeneric) => {
   return res;
 };
 
-const fetchIndexRemote = async () => {
-  const res = await (await fetch("http://localhost:1234/index")).json();
+const fetchIndexRemote = async (api: string) => {
+  const res = await (await fetch(`${api}/index`)).json();
   return res;
 };
 
 const fetchDataRemote = async (
+  api: string,
   route: RouteLocationNormalizedLoadedGeneric,
   page: number = 1,
   per: number = 100,
@@ -21,7 +22,7 @@ const fetchDataRemote = async (
 ) => {
   const res = await (
     await fetch(
-      `http://${window.location.hostname}:1234/${route.query.repo}.${route.query.dist}/?_page=${page}&_per_page=${per}&q=${search || ""}&${Object.keys(
+      `${api}/${route.query.repo}.${route.query.dist}/?_page=${page}&_per_page=${per}&q=${search || ""}&${Object.keys(
         extraflags,
       )
         .map((k) => `${k}=${extraflags[k]}`)

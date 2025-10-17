@@ -102,6 +102,7 @@
 
 <script lang="ts" setup>
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
+import apis from "@/assets/apis.json";
 
 const items = ref([]);
 const search = ref("");
@@ -150,7 +151,9 @@ const fetchdata = async (
     if (check_blank(r)) return;
     items.value.splice(0, items.value.length);
     loading.value = true;
+    const api_id = (r || route).query.api?.toString() || "public";
     const res = await fetchDataRemote(
+        apis[api_id].url || "http://localhost:1234",
         r || route,
         curpage.value,
         itemsperpage.value,
@@ -163,7 +166,6 @@ const fetchdata = async (
 };
 
 onBeforeRouteUpdate(fetchdata);
-//onMounted(fetchdata);
 
 const headers = [
     { title: "Source Name", value: "source" },

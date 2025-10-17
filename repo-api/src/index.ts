@@ -18,8 +18,13 @@ for (const file of fs.readdirSync('data')) {
 
 const app = createApp(dbs, { logger: false });
 
+const host = process.env.HOST || 'localhost';
 const port = parseInt(process.env.PORT || '') || 1234;
 
-app.listen(port, () => {
-	console.log(`JSON Server started on PORT :${port}`);
-});
+app.listen(
+	port,
+	() => {
+		console.log(`JSON Server started on PORT :${port}`);
+	},
+	host,
+);
