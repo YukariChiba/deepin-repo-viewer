@@ -102,7 +102,6 @@
 
 <script lang="ts" setup>
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
-import apis from "@/assets/apis.json";
 
 const items = ref([]);
 const search = ref("");
@@ -153,7 +152,7 @@ const fetchdata = async (
     loading.value = true;
     const api_id = (r || route).query.api?.toString() || "public";
     const res = await fetchDataRemote(
-        apis[api_id].url || "http://localhost:1234",
+        getApi(api_id).url,
         r || route,
         curpage.value,
         itemsperpage.value,

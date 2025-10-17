@@ -1,4 +1,10 @@
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
+import apis_data from "@/assets/apis.json";
+
+type Repository = {
+  url: string;
+  dists: string[];
+};
 
 const fetchDataLocal = async (route: RouteLocationNormalizedLoadedGeneric) => {
   const res: [] = (
@@ -8,7 +14,7 @@ const fetchDataLocal = async (route: RouteLocationNormalizedLoadedGeneric) => {
 };
 
 const fetchIndexRemote = async (api: string) => {
-  const res = await (await fetch(`${api}/index`)).json();
+  const res: Repository = await (await fetch(`${api}/index`)).json();
   return res;
 };
 
@@ -32,4 +38,22 @@ const fetchDataRemote = async (
   return res;
 };
 
-export { fetchDataLocal, fetchDataRemote, fetchIndexRemote };
+enum APIKeys {
+  url = "url",
+  title = "title",
+}
+type API = {
+  [key in APIKeys]: string;
+};
+type APIs = Record<string, API>;
+
+const getApi = (api: string | undefined) => {
+  const apis: APIs = apis_data;
+  if (api && apis[api]) return apis[api];
+  return {
+    url: "http://localhost:1234",
+    title: "Default API",
+  };
+};
+
+export { fetchDataLocal, fetchDataRemote, fetchIndexRemote, getApi };

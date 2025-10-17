@@ -1,8 +1,4 @@
 {
-  "internal-deepin": {
-    "url": "http://localhost:1234",
-    "title": "Internal API (deepin)"
-  },
   "public": {
     "url": "https://deepin-repo-viewer-api.0x7f.cc",
     "title": "Public API"
@@ -10,5 +6,9 @@
   "internal-dn42": {
     "url": "https://repo-viewer.deepin.gensokyo.dn42",
     "title": "Public API (DN42)"
+  },
+  "local": {
+    "url": "http://localhost:1234",
+    "title": "Local Test API"
   }
 }

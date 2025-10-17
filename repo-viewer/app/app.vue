@@ -12,8 +12,8 @@
                     <template #item="{ props: itemProps, item }">
                         <v-list-item
                             v-bind="itemProps"
-                            :title="apis[item.raw].title"
-                            :subtitle="apis[item.raw].url"
+                            :title="getApi(item.raw).title"
+                            :subtitle="getApi(item.raw).url"
                         />
                     </template>
                 </v-select>
@@ -40,17 +40,21 @@
                 />
             </v-app-bar>
             <NuxtPage />
+            <v-snackbar-queue v-model="snackbar.queue" />
         </v-main>
     </v-app>
 </template>
 
 <script setup lang="ts">
 import apis_data from "@/assets/apis.json";
+import { ref } from "vue";
 
-const apis = apis_data;
-const api_selected = ref("internal-deepin");
+const apis: Record<string, Record<string, string>> = apis_data;
+const api_selected = ref();
 
 const repos = ref({});
+
+const snackbar = useSnackbarStore();
 
 const updateIndex = async () => {
     navigate();
@@ -59,10 +63,14 @@ const updateIndex = async () => {
     dist_selected.value = null;
     if (!api_selected.value) return;
     try {
-        const data = await fetchIndexRemote(apis[api_selected.value].url);
+        const data = await fetchIndexRemote(getApi(api_selected.value).url);
         repos.value = data;
     } catch {
         console.log("error");
+        snackbar.add({
+            text: `API ${api_selected.value} Unreachable`,
+            color: "error",
+        });
     }
 };
 onMounted(updateIndex);
