@@ -1,12 +1,15 @@
 <template>
     <v-app>
         <v-main>
-            <v-app-bar>
-                <v-app-bar-title>Repo Viewer</v-app-bar-title>
+            <v-app-bar scroll-behavior="hide">
+                <v-app-bar-title>
+                    <v-icon start icon="mdi-archive-eye" />
+                    Repo Viewer
+                </v-app-bar-title>
                 <v-select
                     v-model="api_selected"
                     clearable
-                    label="Select API..."
+                    label="1. Select API..."
                     :items="Object.keys(apis)"
                     hide-details
                 >
@@ -21,7 +24,7 @@
                 <v-select
                     v-model="repo_selected"
                     clearable
-                    label="Select repository..."
+                    label="2. Select repository..."
                     :disabled="Object.keys(repos).length == 0"
                     :items="Object.keys(repos)"
                     hide-details
@@ -37,7 +40,7 @@
                     v-model="dist_selected"
                     clearable
                     :disabled="!repo_selected"
-                    label="Select distribution..."
+                    label="3. Select distribution..."
                     :items="repo_selected ? repos[repo_selected]?.dists : []"
                     hide-details
                 />

@@ -3,14 +3,24 @@
         <v-card-title class="d-flex align-center">
             {{ `${route.query.repo} | ${route.query.dist}` }}
             <v-spacer class="mx-1" />
-            <v-checkbox
-                v-model="option_version_mismatch"
+            <v-autocomplete
+                v-model="option_filter"
+                :items="filter_items"
+                prepend-inner-icon="mdi-filter-outline"
                 class="mx-2"
+                label="Filters"
+                chips
                 hide-details
-                label="Version Mismatch"
+                variant="outlined"
+                single-line
+                density="compact"
+                multiple
+                clearable
             />
             <v-text-field
                 v-model="search"
+                prepend-inner-icon="mdi-magnify"
+                class="mx-2"
                 label="Search"
                 clearable
                 variant="outlined"
@@ -115,7 +125,7 @@ const curpage = ref(1);
 
 const route = useRoute();
 
-const option_version_mismatch = ref(false);
+const option_filter = ref([]);
 
 const extraflags: ExtraQuery = new ExtraQuery();
 
@@ -153,8 +163,9 @@ const fetchdata = async (
     loading.value = false;
 };
 
-watch(option_version_mismatch, async (d: boolean) => {
-    extraflags.setKeyBool("data.meta.version_mismatch", d);
+watch(option_filter, async (d: string[]) => {
+    extraflags.clearKey();
+    for (const i of d) extraflags.setKeyBool(i, true);
     await fetchdata();
 });
 onBeforeRouteUpdate(fetchdata);
@@ -164,5 +175,42 @@ const headers = [
     { title: "Component", value: "component" },
     { title: "Source Version", value: "data1" },
     { title: "Package Versions", value: "data2" },
+];
+
+const filter_items = [
+    { type: "subheader", title: "Metadata" },
+    {
+        title: "Version Mismatched",
+        value: "data.meta.version_mismatch",
+    },
+    {
+        title: "GitHub Repository Available",
+        value: "data.github",
+    },
+    { type: "subheader", title: "Architecture" },
+    {
+        title: "Arch: amd64",
+        value: "data.binary.amd64",
+    },
+    {
+        title: "Arch: arm64",
+        value: "data.binary.arm64",
+    },
+    {
+        title: "Arch: riscv64",
+        value: "data.binary.riscv64",
+    },
+    {
+        title: "Arch: loong64",
+        value: "data.binary.loong64",
+    },
+    {
+        title: "Arch: i386",
+        value: "data.binary.i386",
+    },
+    {
+        title: "Arch: all",
+        value: "data.binary.all",
+    },
 ];
 </script>
