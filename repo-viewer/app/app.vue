@@ -5,6 +5,7 @@
                 <v-app-bar-title>Repo Viewer</v-app-bar-title>
                 <v-select
                     v-model="api_selected"
+                    clearable
                     label="Select API..."
                     :items="Object.keys(apis)"
                     hide-details
@@ -19,6 +20,7 @@
                 </v-select>
                 <v-select
                     v-model="repo_selected"
+                    clearable
                     label="Select repository..."
                     :disabled="Object.keys(repos).length == 0"
                     :items="Object.keys(repos)"
@@ -27,15 +29,16 @@
                     <template #item="{ props: itemProps, item }">
                         <v-list-item
                             v-bind="itemProps"
-                            :subtitle="repos[item.raw].url"
+                            :subtitle="repos[item.raw]?.url"
                         />
                     </template>
                 </v-select>
                 <v-select
                     v-model="dist_selected"
+                    clearable
                     :disabled="!repo_selected"
                     label="Select distribution..."
-                    :items="repo_selected ? repos[repo_selected].dists : []"
+                    :items="repo_selected ? repos[repo_selected]?.dists : []"
                     hide-details
                 />
             </v-app-bar>
@@ -48,11 +51,12 @@
 <script setup lang="ts">
 import apis_data from "@/assets/apis.json";
 import { ref } from "vue";
+import type { APIs, Repositories } from "@/utils/api";
 
-const apis: Record<string, Record<string, string>> = apis_data;
+const apis: APIs = apis_data;
 const api_selected = ref();
 
-const repos = ref({});
+const repos: Ref<Repositories> = ref({});
 
 const snackbar = useSnackbarStore();
 
@@ -63,7 +67,9 @@ const updateIndex = async () => {
     dist_selected.value = null;
     if (!api_selected.value) return;
     try {
-        const data = await fetchIndexRemote(getApi(api_selected.value).url);
+        const data: Repositories = await fetchIndexRemote(
+            getApi(api_selected.value).url,
+        );
         repos.value = data;
     } catch {
         console.log("error");

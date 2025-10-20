@@ -4,10 +4,10 @@
             {{ `${route.query.repo} | ${route.query.dist}` }}
             <v-spacer class="mx-1" />
             <v-checkbox
-                class="mx-4"
+                v-model="option_version_mismatch"
+                class="mx-2"
                 hide-details
                 label="Version Mismatch"
-                @click="setextra('data.meta.version_mismatch')"
             />
             <v-text-field
                 v-model="search"
@@ -58,7 +58,7 @@
                     :key="arch"
                 >
                     <v-tooltip>
-                        <template v-slot:activator="{ props }">
+                        <template #activator="{ props }">
                             <v-chip
                                 v-bind="props"
                                 :color="
@@ -97,11 +97,13 @@
         headline="Welcome!"
         title="Select a repository to continue..."
         icon="mdi-magnify"
+        :text="`${new Date().getFullYear()} &copy; deepin-ports SIG`"
     />
 </template>
 
 <script lang="ts" setup>
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
+import { ExtraQuery } from "@/utils/query";
 
 const items = ref([]);
 const search = ref("");
@@ -113,24 +115,11 @@ const curpage = ref(1);
 
 const route = useRoute();
 
-const extraflags: Ref<{ [key: string]: string }> = ref({});
+const option_version_mismatch = ref(false);
 
-const setextra = async (str: string, content: string | null = null) => {
-    if (content) {
-        extraflags.value[str] = content;
-    } else {
-        if (str in Object.keys(extraflags)) {
-            extraflags.value[str] =
-                extraflags.value[str] === "true" ? "false" : "true";
-        } else {
-            extraflags.value[str] = "true";
-        }
-    }
+const extraflags: ExtraQuery = new ExtraQuery();
 
-    await fetchdata();
-};
-
-const check_mismatch = (it, arch) => {
+const check_mismatch = (it, arch: string) => {
     return ((it.data.meta || {}).version_mismatch || {})[arch];
 };
 
@@ -157,13 +146,17 @@ const fetchdata = async (
         curpage.value,
         itemsperpage.value,
         search.value,
-        extraflags.value,
+        extraflags,
     );
     items.value.splice(0, items.value.length, ...res.data);
     totalitems.value = res.items;
     loading.value = false;
 };
 
+watch(option_version_mismatch, async (d: boolean) => {
+    extraflags.setKeyBool("data.meta.version_mismatch", d);
+    await fetchdata();
+});
 onBeforeRouteUpdate(fetchdata);
 
 const headers = [

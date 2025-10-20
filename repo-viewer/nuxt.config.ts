@@ -10,6 +10,16 @@ export default defineNuxtConfig({
   ],
   ssr: false,
 
+  app: {
+    head: {
+      title: "deepin-repo-viewer",
+      htmlAttrs: {
+        lang: "en",
+      },
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    },
+  },
+
   // when enabling ssr option you need to disable inlineStyles and maybe devLogs
   features: {
     inlineStyles: false,
