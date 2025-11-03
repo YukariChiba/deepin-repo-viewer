@@ -1,9 +1,13 @@
+import datetime
 import json
-from os import getenv
+from os import getenv, path
+import os
 from pathlib import Path
 from modules.manager import RepoManager
 from modules.repo import Repository, RepositoryDist
 from addict import Dict as AddDict
+import multiprocessing
+from modules.config import RepositoryConfig, RepositoryConfigs
 
 
 def set_default(obj):
@@ -19,7 +23,7 @@ class PackageDistOverview:
         self.data = AddDict()
         for comp in dist.components:
             print(
-                f"processing repo {dist.config['id']} dist {dist.dist} comp {comp.component}"
+                f"[{dist.config['id']}] processing dist {dist.dist} comp {comp.component}"
             )
             for source in comp.sourcelists.sources:
                 srcpkg = source.get_as_string("Package")
@@ -62,17 +66,41 @@ class PackageDistOverview:
             json.dump(processed, f, default=set_default)
 
 
-class PackagesOverview:
-    data = AddDict()
+def get_overview_from_config(repoconf: RepositoryConfig, repoman: RepoManager = RepoManager()):
+    repo = Repository(repoconf)
 
-    def __init__(self, repos: list[Repository], repoman: RepoManager):
-        for repo in repos:
-            self.data[repo.config["id"]] = {"url": repo.config["url"], "dists": []}
-            for dist in repo.dists:
-                self.data[repo.config["id"]]['dists'].append(dist.dist)
-                _ = PackageDistOverview(dist, repoman)
-        with open(
-            Path(getenv("DATA_PATH", "data")) / "index.json",
-            "w",
-        ) as f:
-            json.dump(self.data, f, default=set_default)
+    data = AddDict()
+    file = Path(getenv("DATA_PATH", "data")) / f"overview_{repo.config['id']}.json"
+
+    data[repo.config["id"]] = {
+        "url": repo.config["url"],
+        "dists": [],
+        "updated": datetime.datetime.now(datetime.timezone.utc).timestamp() * 1000,
+    }
+    for dist in repo.dists:
+        data[repo.config["id"]]["dists"].append(
+            {
+                "name": dist.dist,
+                "comps": [comp.component for comp in dist.components],
+            }
+        )
+        PackageDistOverview(dist, repoman)
+    with open(file, "w") as f:
+        json.dump(data, f, default=set_default)
+        f.close()
+    return file
+
+
+def get_overview_from_configs(configs: RepositoryConfigs):
+    pool = multiprocessing.Pool(processes=(multiprocessing.cpu_count() - 1))
+    result_files = pool.map(get_overview_from_config, configs)
+    pool.close()
+    pool.join()
+    results = AddDict()
+    for f in result_files:
+        fd = open(f, "r")
+        results = results | json.load(fd)
+        fd.close()
+        os.remove(f)
+    with open(Path(getenv("DATA_PATH", "data")) / "index.json", "w") as f:
+        json.dump(results, f, default=set_default)

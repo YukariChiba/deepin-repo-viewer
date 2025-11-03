@@ -30,7 +30,6 @@ class CachedFile:
                 file_time = datetime.fromtimestamp(path.getmtime(filepath)).astimezone()
                 if modified_time <= file_time:
                     return filepath
-            return filepath
         r = requests.get(self.url)
         if is_gzip:
             _ = filepath.write_bytes(gzip.decompress(r.content))

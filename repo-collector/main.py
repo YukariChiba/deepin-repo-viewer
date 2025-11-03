@@ -1,15 +1,13 @@
 from dotenv import load_dotenv
-from modules.collector import PackagesOverview
+from modules.collector import get_overview_from_configs
 from modules.config import RepositoryConfigs, loadConfig
-from modules.manager import RepoManager
-from modules.repo import Repository
+
 
 _ = load_dotenv()
 
 def main():
     config_repos: RepositoryConfigs = loadConfig("repos.json") # pyright: ignore [reportAny]
-    repositories = [Repository(i) for i in config_repos]
-    _ = PackagesOverview(repositories, RepoManager())
+    get_overview_from_configs(config_repos)
 
 if __name__ == "__main__":
     main()

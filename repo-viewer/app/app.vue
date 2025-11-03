@@ -43,6 +43,7 @@
                     label="3. Select distribution..."
                     :items="repo_selected ? repos[repo_selected]?.dists : []"
                     hide-details
+                    item-title="name"
                 />
             </v-app-bar>
             <NuxtPage />

@@ -57,7 +57,7 @@ class RepositoryComponent:
         self.component = component
         self.packagelists = {}
 
-        print(f"Init {config['id']} with dist {dist} component {component}")
+        print(f"[{config['id']}] initializing dist {dist} component {component}")
         for arch in archs:
             self.packagelists[arch] = RepositoryPackageList(
                 config, dist, component, arch

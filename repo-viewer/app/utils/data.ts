@@ -9,7 +9,7 @@ const fetchDataLocal = async (route: RouteLocationNormalizedLoadedGeneric) => {
 };
 
 const fetchIndexRemote = async (api: string) => {
-  const res: Repository = await (await fetch(`${api}/index`)).json();
+  const res: Repositories = await (await fetch(`${api}/index`)).json();
   return res;
 };
 

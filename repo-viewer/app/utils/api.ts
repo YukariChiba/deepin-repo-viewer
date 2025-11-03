@@ -1,8 +1,14 @@
 import apis_data from "@/assets/apis.json";
 
+type Distribution = {
+  name: string;
+  comps: string[];
+};
+
 type Repository = {
   url: string;
-  dists: string[];
+  dists: Distribution[];
+  updated: number;
 };
 
 type Repositories = Record<string, Repository>;
@@ -26,4 +32,4 @@ const getApi = (api: string | undefined) => {
 };
 
 export { getApi };
-export type { APIs, Repositories, Repository };
+export type { APIs, Repositories, Repository, Distribution };

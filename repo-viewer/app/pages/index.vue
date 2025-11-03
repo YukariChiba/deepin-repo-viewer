@@ -114,8 +114,9 @@
 <script lang="ts" setup>
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 import { ExtraQuery } from "@/utils/query";
+import type { PaginationData, DataItem } from "~/utils/pagination";
 
-const items = ref([]);
+const items: Ref<DataItem[]> = ref([]);
 const search = ref("");
 const totalitems = ref(0);
 
@@ -150,7 +151,7 @@ const fetchdata = async (
     items.value.splice(0, items.value.length);
     loading.value = true;
     const api_id = (r || route).query.api?.toString() || "public";
-    const res = await fetchDataRemote(
+    const res: PaginationData = await fetchDataRemote(
         getApi(api_id).url,
         r || route,
         curpage.value,
