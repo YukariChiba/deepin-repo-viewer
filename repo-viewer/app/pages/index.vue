@@ -75,13 +75,13 @@
                                     check_mismatch(item, arch) ? 'warning' : ''
                                 "
                                 class="mr-1"
-                                :text="`${arch} | ${Object.keys(item.data.binary[arch]).length}`"
+                                :text="`${arch} | ${Object.keys(item.data.binary[arch] || []).length}`"
                                 size="small"
                             />
                         </template>
                         <template
                             v-for="[pkg, data] of Object.entries(
-                                item.data.binary[arch],
+                                item.data.binary[arch] || {},
                             )"
                             :key="pkg"
                         >
@@ -130,15 +130,23 @@ const option_filter = ref([]);
 
 const extraflags: ExtraQuery = new ExtraQuery();
 
-const check_mismatch = (it, arch: string) => {
-    return ((it.data.meta || {}).version_mismatch || {})[arch];
+const check_mismatch = (it: DataItem, arch: string) => {
+    if (it.data.meta?.version_mismatch)
+        return Object.keys(it.data.meta?.version_mismatch).includes(arch);
+    return false;
 };
 
 const check_blank = (r: RouteLocationNormalizedLoadedGeneric | null = null) => {
     return !(r || route).query.repo || !(r || route).query.dist;
 };
 
-const onOptionChanged = async ({ page, itemsPerPage }) => {
+const onOptionChanged = async ({
+    page,
+    itemsPerPage,
+}: {
+    page: number;
+    itemsPerPage: number;
+}) => {
     curpage.value = page;
     itemsperpage.value = itemsPerPage;
     await fetchdata();

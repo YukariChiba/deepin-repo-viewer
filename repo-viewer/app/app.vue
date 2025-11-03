@@ -44,7 +44,20 @@
                     :items="repo_selected ? repos[repo_selected]?.dists : []"
                     hide-details
                     item-title="name"
-                />
+                >
+                    <template #item="{ props: itemProps }">
+                        <v-list-item
+                            v-if="repo_selected"
+                            v-bind="itemProps"
+                            :subtitle="
+                                'Updated: ' +
+                                new Date(
+                                    repos[repo_selected]?.updated || '',
+                                ).toDateString()
+                            "
+                        />
+                    </template>
+                </v-select>
             </v-app-bar>
             <NuxtPage />
             <v-snackbar-queue v-model="snackbar.queue" />

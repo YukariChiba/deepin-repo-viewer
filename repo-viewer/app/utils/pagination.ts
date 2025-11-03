@@ -9,6 +9,9 @@ type DataItem = {
     github?: {
       group?: string;
     };
+    meta?: {
+      version_mismatch?: boolean;
+    };
   };
   id: string;
 };
